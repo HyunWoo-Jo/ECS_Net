@@ -6,7 +6,7 @@ using System.IO;
 public static class CustomBuild {
     [MenuItem("Custom/Build/Windows")]
     private static void Build() {
-        string[] scenes = { "Assets/01.Scenes/SampleScene.unity" };
+        string[] scenes = { "Assets/01.Scenes/PlayScene.unity" };
 
         BuildPlayerOptions buildOptions = new BuildPlayerOptions();
         buildOptions.scenes = scenes;
