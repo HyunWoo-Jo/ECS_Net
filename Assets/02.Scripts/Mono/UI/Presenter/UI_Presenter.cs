@@ -6,5 +6,10 @@ namespace Game.Mono.UI
     {
         private T _view;
         private U _model;
+
+        protected virtual void Awake() {
+            _view = this.GetComponent<T>();
+            _model = this.GetComponent<U>();
+        }
     }
 }
