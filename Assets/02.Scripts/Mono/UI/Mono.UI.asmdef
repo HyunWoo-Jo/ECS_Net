@@ -1,0 +1,14 @@
+{
+    "name": "Mono.UI.View",
+    "rootNamespace": "Game.Mono.UI.View",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

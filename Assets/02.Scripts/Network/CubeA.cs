@@ -28,7 +28,7 @@ namespace Game.Network
 
     }
   
-
+    // Command
     [UpdateInGroup(typeof(GhostInputSystemGroup))]
     public partial struct SampleCubeInput : ISystem {
         public void OnUpdate(ref SystemState state) {

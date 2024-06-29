@@ -1,0 +1,14 @@
+{
+    "name": "Game.Ecs.AuthoringAndMono",
+    "rootNamespace": "Game.Ecs",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
