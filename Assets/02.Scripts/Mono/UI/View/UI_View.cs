@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Game.Mono.UI
 {
-    public class UI_View<T> : MonoBehaviour
+    public class UI_View<T> : MonoBehaviour, IView where T : IPresenter
     {
         private T _ui_presenter;
 

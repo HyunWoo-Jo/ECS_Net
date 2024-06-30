@@ -1,18 +1,12 @@
 using UnityEngine;
-
+using UnityEngine.UI;
+using TMPro;
 namespace Game.Mono.UI {
-    public class MainSceneConnecting_UI_View : MonoBehaviour
+    public class MainSceneConnecting_UI_View : UI_View<MainSceneConnecting_UI_Presenter>
     {
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
-        void Start()
-        {
-        
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-        
-        }
+        [SerializeField] private TMP_InputField _IpField;
+        [SerializeField] private TMP_InputField _portField;
+        [SerializeField] private Button _serverClientButton;
+        [SerializeField] private Button _clientButton;
     }
 }

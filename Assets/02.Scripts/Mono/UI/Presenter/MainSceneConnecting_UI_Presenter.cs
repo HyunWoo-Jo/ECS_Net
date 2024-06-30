@@ -1,18 +1,9 @@
 using UnityEngine;
 
 namespace Game.Mono.UI {
-    public class MainSceneConnecting_UI_Presenter : MonoBehaviour
+    // 내부를 internal로 설계
+    public class MainSceneConnecting_UI_Presenter : UI_Presenter<MainSceneConnecting_UI_View, MainSceneConnecting_UI_Model>
     {
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
-        void Start()
-        {
-        
-        }
 
-        // Update is called once per frame
-        void Update()
-        {
-        
-        }
     }
 }
