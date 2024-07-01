@@ -3,18 +3,19 @@ using Game.DesignPattern;
 using Unity.Collections;
 using System.Net;
 using Unity.NetCode;
+using Unity.Networking.Transport;
 namespace Game.Network
 {
     public enum NetworkConnectingType {
         Client,
         Server,
-        ClientServer,
+        ServerClient,
     }
     public class NetworkManager : Singleton<NetworkManager>
     {
-        private string _ip;
-        private ushort _port;
-        private NetworkConnectingType _networkConnectingType;
+        [SerializeField] private string _ip;
+        [SerializeField] private ushort _port;
+        [SerializeField] private NetworkConnectingType _networkConnectingType;
 
         public string Ip { get { return _ip; } }
         public ushort Port { get { return _port; } }
@@ -24,21 +25,21 @@ namespace Game.Network
 
         public void SetIP(string ip) { _ip = ip; }
         public void SetPort(ushort port) { _port = port; }
-        public void OnSetConnectingType(NetworkConnectingType connectingType) {
-            _networkConnectingType = connectingType;
-        }
 
         public override void Awake() {
             base.Awake();
         }
 
         public void LoadClient() {
-
+            _networkConnectingType = NetworkConnectingType.Client;
+            NetworkEndpoint endPoint = NetworkEndpoint.Parse(_ip, _port);
+            ClientServerBootstrap.DefaultConnectAddress = endPoint;
+         
         }
 
-        public void LoadClientServer() {
+        public void LoadServerClient() {
+            _networkConnectingType = NetworkConnectingType.ServerClient;
             ClientServerBootstrap.AutoConnectPort = _port;
-
         }
 
     }
