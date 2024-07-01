@@ -1,8 +1,10 @@
 {
-    "name": "Game.Ecs.AuthoringAndMono",
-    "rootNamespace": "Game.Ecs",
+    "name": "Game.Editor",
+    "rootNamespace": "Game.Editor",
     "references": [],
-    "includePlatforms": [],
+    "includePlatforms": [
+        "Editor"
+    ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,

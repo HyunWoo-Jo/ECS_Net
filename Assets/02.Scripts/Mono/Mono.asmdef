@@ -1,7 +1,10 @@
 {
-    "name": "Game.Ecs.ComponentAndTag",
-    "rootNamespace": "Game.Ecs",
-    "references": [],
+    "name": "Mono",
+    "rootNamespace": "Game.Mono",
+    "references": [
+        "GUID:f3e2b6a835f80714899f4a70c2d7f274",
+        "GUID:89d53ae8da3cf384d885008b42212d9f"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

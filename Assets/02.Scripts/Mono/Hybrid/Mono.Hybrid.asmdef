@@ -1,6 +1,6 @@
 {
     "name": "Mono.Hybrid",
-    "rootNamespace": "Game.Mono.Hybrid",
+    "rootNamespace": "Mono.Hybrid",
     "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],
