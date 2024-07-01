@@ -47,7 +47,6 @@ namespace Game.Network {
                 var req = commandBuffer.CreateEntity(); // 새로운 Entity 생성
                 commandBuffer.AddComponent<GoInGameRequest>(req); // rpc 기반 오브젝트 추가
                 commandBuffer.AddComponent(req, new SendRpcCommandRequest { TargetConnection = entity }); // send RpcCommand를 새로운 Entity에 추가 하면서 기반을 networkId 오브젝트로 추가
-                Debug.Log("?");
             }
             commandBuffer.Playback(state.EntityManager);
         }
