@@ -6,18 +6,23 @@ namespace Game.Mono
 {
     public class InitilizeMainScene : MonoBehaviour
     {
+        private bool isInit = false;
+
         private void Start()
         {
             NetworkManager.Instance.AddLoadListener(LoadPlayScene);
-            
+            isInit = true;
         }
 
         private void OnDisable() {
-            NetworkManager.Instance.DeleteLoadListener(LoadPlayScene);
+            if(isInit)
+                NetworkManager.Instance.DeleteLoadListener(LoadPlayScene);
         }
 
         private void LoadPlayScene() {
-            SceneManager.LoadScene("PlayScene");
+            AsyncOperation asyncLoader =  SceneManager.LoadSceneAsync("PlayScene");
+            NetworkManager.Instance.DeleteLoadListener(LoadPlayScene);
+            isInit = false;
         }
 
     }

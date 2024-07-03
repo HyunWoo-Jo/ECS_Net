@@ -17,7 +17,12 @@ namespace Game.Network
     public class Bootstrap : ClientServerBootstrap {
  
         public override bool Initialize(string defaultWorldName) {
-            return base.Initialize(defaultWorldName);
+            if (AutoConnectPort != 0) {
+                return base.Initialize(defaultWorldName);
+            } else {       
+                CreateLocalWorld(defaultWorldName);
+                return true;
+            }
         }
     }
 }

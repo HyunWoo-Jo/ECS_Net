@@ -3,6 +3,7 @@ using Game.DesignPattern;
 using Unity.NetCode;
 using Unity.Networking.Transport;
 using System;
+using Unity.Entities;
 namespace Game.Network
 {
     public enum NetworkConnectingType {
@@ -39,19 +40,24 @@ namespace Game.Network
             base.Awake();
         }
 
+        /// <summary>
+        /// Client 월드로 셋팅
+        /// </summary>
         public void LoadClient() {
             _networkConnectingType = NetworkConnectingType.Client;
             NetworkEndpoint endPoint = NetworkEndpoint.Parse(_ip, _port);
             ClientServerBootstrap.DefaultConnectAddress = endPoint;
-            ClientServerBootstrap.AutoConnectPort = _port;
             _loadListner?.Invoke();
         }
 
+        /// <summary>
+        /// Client Server 월드로 셋팅
+        /// </summary>
         public void LoadServerClient() {
             _networkConnectingType = NetworkConnectingType.ServerClient;
-            ClientServerBootstrap.AutoConnectPort = _port;
             _loadListner?.Invoke();
         }
+ 
 
     }
 }

@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace Game.DesignPattern
 {
+    [DefaultExecutionOrder(-100)]
     public class Singleton<T> : MonoBehaviour where T : MonoBehaviour {
 
         private static T _instance;
