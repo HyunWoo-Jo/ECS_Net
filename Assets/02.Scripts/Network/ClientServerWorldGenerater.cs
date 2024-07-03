@@ -14,15 +14,17 @@ namespace Game.Network
         {
             _port = NetworkManager.Instance.Port;
             if(NetworkManager.Instance.NetworkConnectingType == NetworkConnectingType.ServerClient) {
+                DestroyLocalWorld();
                 ServerWorldCreate();
+                ClientWorldCreate();
+            } else if(NetworkManager.Instance.NetworkConnectingType == NetworkConnectingType.Client) {
+                DestroyLocalWorld();
+                ClientWorldCreate();
             }
         }
         // 서버와 클라리언트 월드를 생성
         private void ServerWorldCreate() {
             World server = ClientServerBootstrap.CreateServerWorld("ServerWorld");
-            World client = ClientServerBootstrap.CreateClientWorld("ClientWorld");
-
-            DestroyLocalWorld();
             World.DefaultGameObjectInjectionWorld ??= server;
 
             // server
@@ -35,22 +37,19 @@ namespace Game.Network
                 //Entity listenRequestEntity = server.EntityManager.CreateEntity(typeof(NetworkStreamRequestListen));
                 //server.EntityManager.SetComponentData(listenRequestEntity, new NetworkStreamRequestListen { Endpoint = enp });
             }
-            // client
-            {
-                EntityQuery drvQuery = client.EntityManager.CreateEntityQuery(ComponentType.ReadWrite<NetworkStreamDriver>());
-                NetworkEndpoint enp = ClientServerBootstrap.DefaultConnectAddress.WithPort(_port);
-                drvQuery.GetSingletonRW<NetworkStreamDriver>().ValueRW.Connect(client.EntityManager, enp);
-
-                // Lagacy
-                //Entity listenRequestEntity = client.EntityManager.CreateEntity(typeof(NetworkStreamRequestConnect));
-                //client.EntityManager.SetComponentData(listenRequestEntity, new NetworkStreamRequestConnect { Endpoint = enp });
-            }
         }
 
-        private void ClientWorldCreate() { 
+        private void ClientWorldCreate() {
+            World client = ClientServerBootstrap.CreateClientWorld("ClientWorld");
+            World.DefaultGameObjectInjectionWorld ??= client;
+            EntityQuery drvQuery = client.EntityManager.CreateEntityQuery(ComponentType.ReadWrite<NetworkStreamDriver>());
+           
+            NetworkEndpoint enp = ClientServerBootstrap.DefaultConnectAddress.WithPort(_port);
+            drvQuery.GetSingletonRW<NetworkStreamDriver>().ValueRW.Connect(client.EntityManager, enp);
 
-
-
+            // Lagacy
+            //Entity listenRequestEntity = client.EntityManager.CreateEntity(typeof(NetworkStreamRequestConnect));
+            //client.EntityManager.SetComponentData(listenRequestEntity, new NetworkStreamRequestConnect { Endpoint = enp });
         }
 
         /// <summary>
