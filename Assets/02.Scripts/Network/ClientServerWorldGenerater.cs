@@ -27,29 +27,18 @@ namespace Game.Network
             World server = ClientServerBootstrap.CreateServerWorld("ServerWorld");
             World.DefaultGameObjectInjectionWorld ??= server;
 
-            // server
-            {
-                EntityQuery drvQuery = server.EntityManager.CreateEntityQuery(ComponentType.ReadWrite<NetworkStreamDriver>());
-                NetworkEndpoint enp = ClientServerBootstrap.DefaultListenAddress.WithPort(_port);
-                drvQuery.GetSingletonRW<NetworkStreamDriver>().ValueRW.Listen(enp);
-
-                // Lagacy
-                //Entity listenRequestEntity = server.EntityManager.CreateEntity(typeof(NetworkStreamRequestListen));
-                //server.EntityManager.SetComponentData(listenRequestEntity, new NetworkStreamRequestListen { Endpoint = enp });
-            }
+            EntityQuery drvQuery = server.EntityManager.CreateEntityQuery(ComponentType.ReadWrite<NetworkStreamDriver>());
+            NetworkEndpoint enp = ClientServerBootstrap.DefaultListenAddress.WithPort(_port);
+            drvQuery.GetSingletonRW<NetworkStreamDriver>().ValueRW.Listen(enp);
         }
 
         private void ClientWorldCreate() {
             World client = ClientServerBootstrap.CreateClientWorld("ClientWorld");
             World.DefaultGameObjectInjectionWorld ??= client;
-            EntityQuery drvQuery = client.EntityManager.CreateEntityQuery(ComponentType.ReadWrite<NetworkStreamDriver>());
-           
+
+            EntityQuery drvQuery = client.EntityManager.CreateEntityQuery(ComponentType.ReadWrite<NetworkStreamDriver>());          
             NetworkEndpoint enp = ClientServerBootstrap.DefaultConnectAddress.WithPort(_port);
             drvQuery.GetSingletonRW<NetworkStreamDriver>().ValueRW.Connect(client.EntityManager, enp);
-
-            // Lagacy
-            //Entity listenRequestEntity = client.EntityManager.CreateEntity(typeof(NetworkStreamRequestConnect));
-            //client.EntityManager.SetComponentData(listenRequestEntity, new NetworkStreamRequestConnect { Endpoint = enp });
         }
 
         /// <summary>
