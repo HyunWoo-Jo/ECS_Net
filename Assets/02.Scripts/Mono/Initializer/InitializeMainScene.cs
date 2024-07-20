@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 
 namespace Game.Mono
 {
-    public class InitilizeMainScene : MonoBehaviour
+    public class InitializeMainScene : MonoBehaviour
     {
         private bool isInit = false;
 
