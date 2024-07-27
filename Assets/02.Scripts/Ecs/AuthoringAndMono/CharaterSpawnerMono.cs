@@ -9,7 +9,7 @@ namespace Game.Ecs
         private class ChracterSpawnerBaker : Baker<CharaterSpawnerMono> {
             public override void Bake(CharaterSpawnerMono authoring) {
                 Entity entity = GetEntity(authoring.gameObject, TransformUsageFlags.Dynamic);
-                AddComponent(entity, new SpawnerComponent { 
+                AddComponent(entity, new SpawnerProperties { 
                     playerEntity = GetEntity(authoring._playerObj, TransformUsageFlags.Dynamic) 
                 });
             }

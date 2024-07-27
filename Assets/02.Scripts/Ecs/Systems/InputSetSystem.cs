@@ -12,7 +12,7 @@ namespace Game.Ecs
     public partial struct InputSetSystem : ISystem {
         [BurstCompile]
         void OnCreate(ref SystemState state) {
-            state.RequireForUpdate<MoveInputComponent>();
+            state.RequireForUpdate<NetMoveInputProperties>();
         }
         [BurstCompile]
         void OnDestroy(ref SystemState state) { 
@@ -27,7 +27,7 @@ namespace Game.Ecs
         [BurstCompile]
         private partial struct InputSetJob : IJobEntity {
             [BurstCompile]
-            private void Execute(RefRO<MoveInputComponent> moveInputRefRO, RefRW<MovementComponent> moveRefRW, Simulate simulate) {
+            private void Execute(RefRO<NetMoveInputProperties> moveInputRefRO, RefRW<MovementProperties> moveRefRW, Simulate simulate) {
                 moveRefRW.ValueRW.moveDirction = new float3(moveInputRefRO.ValueRO.horizontal, 0, moveInputRefRO.ValueRO.vertical);
             }
         }

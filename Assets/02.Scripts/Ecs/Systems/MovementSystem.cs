@@ -14,7 +14,7 @@ namespace Game.Ecs
     public partial struct MovementSystem : ISystem {
         [BurstCompile]
         void OnCreate(ref SystemState state) {
-            state.RequireForUpdate<MovementComponent>();
+            state.RequireForUpdate<MovementProperties>();
         }
         [BurstCompile]
         void OnDestroy(ref SystemState state) { }
@@ -28,7 +28,7 @@ namespace Game.Ecs
         private partial struct MoveJob : IJobEntity {
             public float deltaTime;
             [BurstCompile]
-            private void Execute(RefRO<MovementComponent> moveRefRO, RefRW<LocalTransform> localTrRefRW) {
+            private void Execute(RefRO<MovementProperties> moveRefRO, RefRW<LocalTransform> localTrRefRW) {
                 if (moveRefRO.ValueRO.isStop) return;
                 localTrRefRW.ValueRW.Position += moveRefRO.ValueRO.moveDirction * moveRefRO.ValueRO.moveSpeed * deltaTime;
             }

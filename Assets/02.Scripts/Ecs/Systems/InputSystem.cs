@@ -41,7 +41,7 @@ namespace Game.Ecs
 
         [BurstCompile]
         protected override void OnUpdate() {
-            foreach (var moveInput in SystemAPI.Query<RefRW<MoveInputComponent>>().WithAll<GhostOwnerIsLocal>()) {
+            foreach (var moveInput in SystemAPI.Query<RefRW<NetMoveInputProperties>>().WithAll<GhostOwnerIsLocal>()) {
                 moveInput.ValueRW.horizontal = _inputRight;
                 moveInput.ValueRW.vertical = _inputUp;
             }

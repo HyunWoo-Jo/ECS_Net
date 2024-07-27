@@ -43,7 +43,7 @@ namespace Game.Network
     [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
     public partial struct NetworkServerSpawnSystem : ISystem {
         private ComponentLookup<NetworkId> networkIdFromEntity;
-        private SpawnerComponent spawnerCoponent;
+        private SpawnerProperties spawnerProperties;
         [BurstCompile]
         void OnCreate(ref SystemState state) {
             var builder = new EntityQueryBuilder(Allocator.Temp)
@@ -62,7 +62,7 @@ namespace Game.Network
         void OnUpdate(ref SystemState state) {
             networkIdFromEntity.Update(ref state);
 
-            spawnerCoponent = SystemAPI.GetSingleton<SpawnerComponent>();
+            spawnerProperties = SystemAPI.GetSingleton<SpawnerProperties>();
             var ecb = new EntityCommandBuffer(Allocator.Temp);
             foreach(var (reqSrc, spawnRpc, reqEntity) in SystemAPI.Query<RefRO<ReceiveRpcCommandRequest>, SpawnRpcCommand>().WithEntityAccess()) {
                 ecb.AddComponent<NetworkStreamInGame>(reqSrc.ValueRO.SourceConnection);
@@ -70,7 +70,7 @@ namespace Game.Network
 
                 switch (spawnRpc.spawnType) {
                     case Data.SpawnType.Player:
-                    Entity playerEntity = ecb.Instantiate(spawnerCoponent.playerEntity);
+                    Entity playerEntity = ecb.Instantiate(spawnerProperties.playerEntity);
                     ecb.SetComponent(playerEntity, new GhostOwner { NetworkId = networkId.Value });
                     ecb.AppendToBuffer(reqSrc.ValueRO.SourceConnection, new LinkedEntityGroup { Value = playerEntity });
                     ecb.DestroyEntity(reqEntity);

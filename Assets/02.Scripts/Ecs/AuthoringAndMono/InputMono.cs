@@ -8,7 +8,7 @@ namespace Game.Ecs
         private class InputBaker : Baker<InputMono> {
             public override void Bake(InputMono authoring) {
                 Entity entity = GetEntity(authoring.gameObject, TransformUsageFlags.Dynamic);
-                AddComponent(entity, new MoveInputComponent { });
+                AddComponent(entity, new NetMoveInputProperties { });
 
             }
         }

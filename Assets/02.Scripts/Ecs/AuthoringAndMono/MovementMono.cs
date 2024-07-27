@@ -11,7 +11,7 @@ namespace Game.Ecs
             public override void Bake(MovementMono authoring) {
                 Entity entity = GetEntity(authoring.gameObject, TransformUsageFlags.Dynamic);
 
-                AddComponent(entity, new MovementComponent { 
+                AddComponent(entity, new MovementProperties { 
                     moveSpeed = authoring._moveSpeed, 
                     rotationSpeed = authoring._rotationSpeed 
                 }); 

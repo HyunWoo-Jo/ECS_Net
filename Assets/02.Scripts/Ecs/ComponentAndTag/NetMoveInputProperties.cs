@@ -4,7 +4,7 @@ using Unity.NetCode;
 namespace Game.Ecs
 {
     // Net Command Component
-    public partial struct MoveInputComponent : IInputComponentData {
+    public partial struct NetMoveInputProperties : IInputComponentData {
         public float horizontal;
         public float vertical;
     }
