@@ -13,8 +13,8 @@ namespace Game.DesignPattern
         public virtual void Awake() {
             // init
             if (_instance == null) {
-                _instance = this.gameObject.GetComponent<T>();
                 DontDestroyOnLoad(this.gameObject);
+                _instance = this.gameObject.GetComponent<T>();
             } else {
                 Destroy(this.gameObject);
             }

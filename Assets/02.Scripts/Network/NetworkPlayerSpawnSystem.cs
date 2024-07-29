@@ -16,7 +16,7 @@ namespace Game.Network
             var builder = new EntityQueryBuilder(Allocator.Temp)
                 .WithAll<NetworkId>()
                 .WithNone<NetworkStreamInGame>();
-            state.RequireForUpdate(state.GetEntityQuery(builder));
+            state.RequireForUpdate(state.GetEntityQuery(builder)); 
         }
         [BurstCompile]
         void OnDestroy(ref SystemState state) {
@@ -61,8 +61,7 @@ namespace Game.Network
         [BurstCompile]
         void OnUpdate(ref SystemState state) {
             networkIdFromEntity.Update(ref state);
-
-            spawnerProperties = SystemAPI.GetSingleton<SpawnerProperties>();
+            if (!SystemAPI.TryGetSingleton<SpawnerProperties>(out spawnerProperties)) return;
             var ecb = new EntityCommandBuffer(Allocator.Temp);
             foreach(var (reqSrc, spawnRpc, reqEntity) in SystemAPI.Query<RefRO<ReceiveRpcCommandRequest>, SpawnRpcCommand>().WithEntityAccess()) {
                 ecb.AddComponent<NetworkStreamInGame>(reqSrc.ValueRO.SourceConnection);

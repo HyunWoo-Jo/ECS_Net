@@ -1,17 +1,18 @@
 using UnityEngine;
 using Unity.Mathematics;
+using Game.DesignPattern;
 namespace Game.Mono
 {
-    public class CameraController : MonoBehaviour
+    public class CameraController : Singleton<CameraController>
     {
         [SerializeField] private Transform _targetTransform;
         [SerializeField] private Vector3 _offset;
         [SerializeField] private float _smoothSpeed;
 
         private Camera _camera;
-        
 
-        private void Awake() {
+
+        private void OnEnable() {
             GetMainCamera();
         }
 
@@ -23,7 +24,7 @@ namespace Game.Mono
             _camera = Camera.main;
         }
 
-        private void SetTargetPos(float3 position) {
+        public void SetTargetPos(float3 position) {
             _targetTransform.position = position;
         }
 
