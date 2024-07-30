@@ -153,7 +153,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_MotionType: 0
   m_Smoothing: 0
-  m_Mass: 1
+  m_Mass: 4
   m_LinearDamping: 0.01
   m_AngularDamping: 0.05
   m_InitialLinearVelocity:
@@ -365,8 +365,8 @@ MonoBehaviour:
   HasOwner: 1
   SupportAutoCommandTarget: 1
   TrackInterpolationDelay: 0
-  GhostGroup: 0
-  UsePreSerialization: 0
+  GhostGroup: 1
+  UsePreSerialization: 1
 --- !u!114 &-5834850366791114425
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -379,7 +379,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c34fa421b0a23ae4589c09cd383254b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _moveSpeed: 4
+  _acceleration: 90
+  _maxVelocity: 8
   _rotationSpeed: 5
 --- !u!114 &-5387460694462839903
 MonoBehaviour:
