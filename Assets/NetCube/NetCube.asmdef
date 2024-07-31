@@ -1,0 +1,26 @@
+{
+    "name": "NetCube",
+    "rootNamespace": "",
+    "references": [
+        "Unity.Burst",
+        "Unity.Entities",
+        "Unity.Entities.Hybrid",
+        "Unity.Transforms",
+        "Unity.Collections",
+        "Unity.Mathematics",
+        "Unity.Networking.Transport",
+        "Unity.NetCode",
+        "Unity.Entities.Graphics",
+        "Unity.InputSystem",
+        "Unity.Physics"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
