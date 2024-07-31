@@ -6,6 +6,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using System;
 using Game.Mono;
+using Codice.CM.Client.Differences;
 
 namespace Game.Ecs
 {
@@ -14,6 +15,11 @@ namespace Game.Ecs
     public partial class TraceCameraSystem : SystemBase
     {
         private Action<float3> traceCamera_handler;
+
+        protected override void OnCreate() {
+            RequireForUpdate<TraceCameraTag>();
+        }
+
         [BurstCompile]
         protected override void OnUpdate() {
             if (traceCamera_handler == null) {

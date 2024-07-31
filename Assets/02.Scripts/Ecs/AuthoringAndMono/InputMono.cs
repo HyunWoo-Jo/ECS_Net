@@ -3,6 +3,7 @@ using Unity.Entities;
 namespace Game.Ecs
 {
     [RequireComponent(typeof(MovementMono))]
+    [DisallowMultipleComponent]
     public class InputMono : MonoBehaviour
     {
         private class InputBaker : Baker<InputMono> {

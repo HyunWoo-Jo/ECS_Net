@@ -6,6 +6,7 @@ using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Physics;
 using Unity.NetCode;
+using Unity.Collections;
 namespace Game.Ecs
 {
 
@@ -13,21 +14,31 @@ namespace Game.Ecs
     /// Entity의 이동을 담당하는 시스템
     /// </summary>
     [BurstCompile]
-    [UpdateInGroup(typeof(PredictedSimulationSystemGroup))]
     public partial struct MovementSystem : ISystem {
         [BurstCompile]
         void OnCreate(ref SystemState state) {
-            state.RequireForUpdate<MovementProperties>();
+            var builder = new EntityQueryBuilder(Allocator.Temp).
+                WithAll<Simulate>().
+                WithAll<MovementProperties>().
+                WithAll<LocalTransform>();
+            var query = state.GetEntityQuery(builder);
+            state.RequireForUpdate(query);
         }
         [BurstCompile]
         void OnDestroy(ref SystemState state) { }
         [BurstCompile]
         void OnUpdate(ref SystemState state) {        
             float deltaTime = SystemAPI.Time.DeltaTime;
-            new MoveJob { deltaTime = deltaTime }.ScheduleParallel();
-        
+            //var moveJob = new MoveJob { deltaTime = deltaTime };
+            //state.Dependency = moveJob.ScheduleParallel(state.Dependency);
+            var moveJob = new MoveCubeJob {
+                tick = SystemAPI.GetSingleton<NetworkTime>().ServerTick,
+                fixedCubeSpeed = SystemAPI.Time.DeltaTime * 4
+            };
+            state.Dependency = moveJob.ScheduleParallel(state.Dependency);
         }
         [BurstCompile]
+        [WithAll(typeof(Simulate))]
         private partial struct MoveJob : IJobEntity {
             public float deltaTime;
             [BurstCompile]
@@ -41,9 +52,22 @@ namespace Game.Ecs
                 if (direciton.x == 0) liner.x = 0;
                 if (direciton.z == 0) liner.z = 0;
                 velocityRefRW.ValueRW.Linear = liner;
-                
-
             }
+        }
+
+        [BurstCompile]
+        [WithAll(typeof(Simulate))]
+        partial struct MoveCubeJob : IJobEntity {
+            public NetworkTick tick;
+            public float fixedCubeSpeed;
+
+
+            public void Execute(MovementProperties playerInput, ref LocalTransform trans) {
+                var moveInput = new float2(playerInput.moveDirction.x, playerInput.moveDirction.z);
+                moveInput = math.normalizesafe(moveInput) * fixedCubeSpeed;
+                trans.Position += new float3(moveInput.x, 0, moveInput.y);
+            }
+
         }
     }
 }
