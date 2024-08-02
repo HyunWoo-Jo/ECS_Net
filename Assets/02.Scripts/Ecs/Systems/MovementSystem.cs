@@ -29,44 +29,20 @@ namespace Game.Ecs
         void OnDestroy(ref SystemState state) { }
         [BurstCompile]
         void OnUpdate(ref SystemState state) {
-            //float deltaTime = SystemAPI.Time.DeltaTime;
-            //var moveJob = new MoveJob { deltaTime = deltaTime };
-            //state.Dependency = moveJob.ScheduleParallel(state.Dependency);
             var moveJob = new MoveCubeJob {
-                tick = SystemAPI.GetSingleton<NetworkTime>().ServerTick,
-                fixedCubeSpeed = SystemAPI.Time.DeltaTime * 4
+                deltaTime = SystemAPI.Time.DeltaTime
             };
             state.Dependency = moveJob.ScheduleParallel(state.Dependency);
         }
-        //[BurstCompile]
-        //[WithAll(typeof(Simulate))]
-        //private partial struct MoveJob : IJobEntity {
-        //    public float deltaTime;
-        //    [BurstCompile]
-        //    private void Execute(RefRO<NetMoveInputProperties> netMoveDirectionRefRO, RefRO<MovementProperties> moveRefRO, RefRW<PhysicsVelocity> velocityRefRW) {
-        //        if (moveRefRO.ValueRO.isStop) return;
-        //        Debug.Log(netMoveDirectionRefRO.ValueRO.horizontal);
-        //        float3 direciton = new float3(netMoveDirectionRefRO.ValueRO.horizontal, 0, netMoveDirectionRefRO.ValueRO.vertical);
-        //        float3 accel = math.normalizesafe(direciton, float3.zero) * moveRefRO.ValueRO.acceleration * deltaTime;
-        //        float3 liner = velocityRefRW.ValueRO.Linear;
-        //        float3 maxVelocity = moveRefRO.ValueRO.maxVelocity;
-        //        liner = math.clamp(liner + accel, -maxVelocity, maxVelocity);
-        //        if (direciton.x == 0) liner.x = 0;
-        //        if (direciton.z == 0) liner.z = 0;
-        //        velocityRefRW.ValueRW.Linear = liner;
-        //    }
-        //}
         [BurstCompile]
         [WithAll(typeof(Simulate))]
         partial struct MoveCubeJob : IJobEntity {
-            public NetworkTick tick;
-            public float fixedCubeSpeed;
+            public float deltaTime;
 
 
-            public void Execute(NetMoveInputProperties playerInput, ref LocalTransform trans) {
-                var moveInput = new float2(playerInput.horizontal, playerInput.vertical);
-                moveInput = math.normalizesafe(moveInput) * fixedCubeSpeed;
-                trans.Position += new float3(moveInput.x, 0, moveInput.y);
+            public void Execute(NetMoveInputProperties playerInput, MovementProperties moveProperties,  RefRW<LocalTransform> transformRefRW) {
+                var moveInput = new float3(playerInput.horizontal, 0, playerInput.vertical);
+                transformRefRW.ValueRW.Position += math.normalizesafe(moveInput) * deltaTime * moveProperties.moveSpeed;
             }
 
         }

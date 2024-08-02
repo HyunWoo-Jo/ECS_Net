@@ -56,7 +56,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_MotionType: 0
   m_Smoothing: 0
-  m_Mass: 4
+  m_Mass: 80
   m_LinearDamping: 0.01
   m_AngularDamping: 0.05
   m_InitialLinearVelocity:
@@ -146,7 +146,7 @@ MonoBehaviour:
     m_Friction:
       m_Override: 0
       m_Value:
-        Value: 0.5
+        Value: 100
         CombineMode: 0
     m_Restitution:
       m_Override: 0
@@ -282,8 +282,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c34fa421b0a23ae4589c09cd383254b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _acceleration: 90
-  _maxVelocity: 8
+  _moveSpeed: 14
   _rotationSpeed: 5
 --- !u!114 &-5387460694462839903
 MonoBehaviour:
