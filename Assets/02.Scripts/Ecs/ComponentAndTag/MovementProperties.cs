@@ -9,6 +9,5 @@ namespace Game.Ecs
         public float rotationSpeed;
         public float acceleration;
         public float3 maxVelocity;
-        public float3 moveDirction;
     }
 }

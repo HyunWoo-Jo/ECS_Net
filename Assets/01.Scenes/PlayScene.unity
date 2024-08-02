@@ -643,7 +643,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _targetTransform: {fileID: 1770580833}
   _offset: {x: 0, y: 15, z: -7}
-  _smoothSpeed: 5
+  _smoothSpeed: 10
 --- !u!4 &863867848
 Transform:
   m_ObjectHideFlags: 0
