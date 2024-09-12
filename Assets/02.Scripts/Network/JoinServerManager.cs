@@ -28,7 +28,17 @@ namespace Game.Network
             OnTcpCleintAsync();
         }
 
-       
+        /// <summary>
+        /// tcp 연결되어 있나 확인
+        /// </summary>
+        /// <returns></returns>
+        public bool ChkConnected() {
+            if(_tcpClient != null && _tcpClient.Connected) {
+                return true;
+            }
+            return false;
+        }
+
 
         /// <summary>
         /// connect join server - client
@@ -41,7 +51,7 @@ namespace Game.Network
                 _stream = _tcpClient.GetStream();
                 onConnectingListener?.Invoke();
                 ReadMessageAsync();
-                await SendMessageAsync("Hello");
+                await SendMessageAsync("cmd:requestRoom"); // test code
             } catch (Exception e) {
 #if TESTING_DEBUG
                 Debug.Log(e.Message);
@@ -50,18 +60,32 @@ namespace Game.Network
         }
 
         /// <summary>
-        /// 비동기 수신
+        /// 비동기 수신 (반복)
         /// </summary>
-        public async void ReadMessageAsync() {        
+        private async void ReadMessageAsync() {
+            StringBuilder strBulider = new StringBuilder();
+            byte[] buffer = new byte[1024];
             while (true) {
                 try {
-                    byte[] buffer = new byte[4096];
-                    var nBytes = await _stream.ReadAsync(buffer).AsUniTask();
-                    string msg = Encoding.UTF8.GetString(buffer, 0, nBytes);
-                    readMsgListener?.Invoke(msg); // 
+                    var nBytes = await _stream.ReadAsync(buffer, 0, buffer.Length).AsUniTask();
+                    if (nBytes == 0) { // 스트림 종료 처리
+                        break;
+                    }
+                    string msgPart = Encoding.UTF8.GetString(buffer, 0, nBytes);
+                    strBulider.Append(msgPart);
+
+                    string msg = strBulider.ToString();
+                    int divIndex = msg.IndexOf('\n');
+
+                    while(divIndex != -1) {
+                        string completeMessage = strBulider.ToString(0, divIndex);
+                        strBulider.Remove(0, divIndex + 1);
 #if TESTING_DEBUG
-                    Debug.Log("receive from join: " + msg);
+                        Debug.Log("receive from join: " + completeMessage);
 #endif
+                        readMsgListener?.Invoke(completeMessage);
+                        divIndex = strBulider.ToString().IndexOf('\n');
+                    }
                 } catch (Exception e) {
 #if TESTING_DEBUG
                     Debug.Log(e.Message);
@@ -76,7 +100,7 @@ namespace Game.Network
         /// <param name="msg"></param>
         public async UniTask SendMessageAsync(string msg) {
             try {
-                byte[] buffer = Encoding.UTF8.GetBytes(msg);
+                byte[] buffer = Encoding.UTF8.GetBytes(msg + '\n');
                 await _stream.WriteAsync(buffer, 0, buffer.Length);
 #if TESTING_DEBUG
                 Debug.Log("send to join: " + msg);
