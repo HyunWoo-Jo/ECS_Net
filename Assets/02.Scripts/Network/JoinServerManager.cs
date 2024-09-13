@@ -7,6 +7,9 @@ using Game.DesignPattern;
 using Cysharp.Threading.Tasks;
 using Codice.CM.Common;
 using System.Text;
+using JetBrains.Annotations;
+using System.Collections;
+using System.Collections.Generic;
 namespace Game.Network
 {
     public class JoinServerManager : Singleton<JoinServerManager>
@@ -23,11 +26,21 @@ namespace Game.Network
         // listener
         public Action onConnectingListener; // 연결 완료
         public Action<string> readMsgListener; // 메시지 수신
+        public Action<string[]> roomListListener; // roomList 처리
+        public Action<string[]> joinRoomListener; // join Room 처리
 
         private void Start() {
+            //init
+            readMsgListener += (string msg) => { _  = MessageKernel(msg); };
+
             OnTcpCleintAsync();
         }
 
+        private void OnDisable() {
+            CloseTcp();
+        }
+
+        #region tcp funtion
         /// <summary>
         /// tcp 연결되어 있나 확인
         /// </summary>
@@ -38,8 +51,6 @@ namespace Game.Network
             }
             return false;
         }
-
-
         /// <summary>
         /// connect join server - client
         /// </summary>
@@ -47,11 +58,10 @@ namespace Game.Network
         public async void OnTcpCleintAsync() {
             _tcpClient = new TcpClient();
             try {
-                await _tcpClient.ConnectAsync(_joinServerIP, _port).AsUniTask();
+                await _tcpClient.ConnectAsync(_joinServerIP, _port).AsUniTask(); // 서버 연결
                 _stream = _tcpClient.GetStream();
                 onConnectingListener?.Invoke();
-                ReadMessageAsync();
-                await SendMessageAsync("cmd:requestRoom"); // test code
+                _ = ReadMessageAsync();
             } catch (Exception e) {
 #if TESTING_DEBUG
                 Debug.Log(e.Message);
@@ -62,8 +72,8 @@ namespace Game.Network
         /// <summary>
         /// 비동기 수신 (반복)
         /// </summary>
-        private async void ReadMessageAsync() {
-            StringBuilder strBulider = new StringBuilder();
+        private async UniTask ReadMessageAsync() {
+            StringBuilder strBulider = new ();
             byte[] buffer = new byte[1024];
             while (true) {
                 try {
@@ -77,7 +87,7 @@ namespace Game.Network
                     string msg = strBulider.ToString();
                     int divIndex = msg.IndexOf('\n');
 
-                    while(divIndex != -1) {
+                    while (divIndex != -1) {
                         string completeMessage = strBulider.ToString(0, divIndex);
                         strBulider.Remove(0, divIndex + 1);
 #if TESTING_DEBUG
@@ -111,22 +121,106 @@ namespace Game.Network
 #endif
             }
         }
-
-
         /// <summary>
         /// off 
         /// </summary>
         private void CloseTcp() {
-            if (_tcpClient != null) {
-                _tcpClient.Close();
-                _tcpClient.Dispose();
-            }
-            if(_stream != null) {
+            if (_stream != null) {
                 _stream.Close();
                 _stream.Dispose();
             }
+            if (_tcpClient != null) {
+                _tcpClient.Close();
+                _tcpClient.Dispose();
+            }      
+        }
+        #endregion
+
+        #region logic
+        private string[] MessageSplit(string msg) {
+            return msg.Split(":"); 
+        }
+        private async UniTask MessageKernel(string msg) {
+            await UniTask.RunOnThreadPool(() => {
+                string[] splitMsg = msg.Split(":");
+                switch (splitMsg[0]) {
+                    case "msg":
+                    MessageProceesor(splitMsg);
+                    break;
+                    case "data":
+                    DataProcessor(splitMsg);
+                    break;
+                }
+            });
+        }
+        /// <summary>
+        /// msg 처리
+        /// </summary>
+        /// <param name="splitMsg"></param>
+        private void MessageProceesor(string[] splitMsg) {
             
         }
+        /// <summary>
+        /// data 처리
+        /// </summary>
+        /// <param name="splitMsg"></param>
+        private void DataProcessor(string[] splitMsg) {
+            string[] roomDatas;
+            List<string> roomList = new List<string>();
+            switch (splitMsg[1]) {
+                case "roomList": // 방 목록 / data:roomList:roomIpHash/roomName/userName/...
+                roomDatas = splitMsg[2].Split("/");
+                for(int i =0;i < roomDatas.Length - 1; i += 3) {
+                    roomList.Clear();
+                    roomList.Add(roomDatas[i]);
+                    roomList.Add(roomDatas[i + 1]);
+                    roomList.Add(roomDatas[i + 2]);
+                    roomListListener?.Invoke(roomList.ToArray());
+                }
+                break;
+                case "joinRoom": // 방 접속 / data:joinRoom:ip/port
+                roomDatas = splitMsg[2].Split("/");
+                roomList.Add(roomDatas[0]);
+                roomList.Add(roomDatas[1]);
+                joinRoomListener?.Invoke(roomList.ToArray());
+                break;
+            }
+        }
+        #endregion
+
+        #region command
+        /// <summary>
+        /// 방 생성
+        /// </summary>
+        /// <param name="port"></param>
+        /// <param name="userName"></param>
+        /// <param name="roomName"></param>
+        /// <param name="password"></param>
+        public void CreateRoom(string port, string userName, string roomName, string password = "") {
+            // 0.command / 1.type / 2.port / 3.userName
+            // 4.roomName / 5.password
+            string msg = string.Format("cmd:createRoom:{0}:{1}:{2}:{3}", port, userName, roomName, password);
+            _ = SendMessageAsync(msg);
+        }
+        /// <summary>
+        /// 방 요청
+        /// </summary>
+        public void RequestRoom() {
+            string msg = "cmd:requestRoom";
+            _ = SendMessageAsync(msg);
+        }
+        /// <summary>
+        /// 방 접속
+        /// </summary>
+        /// <param name="roomHash"></param>
+        /// <param name="password"></param>
+        public void JoinRoom(string roomHash, string password = "") {
+            string msg = string.Format("cmd:joinRoom:{0}:{1}", roomHash, password);
+            _ = SendMessageAsync(msg);
+        }
+
+
+        #endregion
 
     }
 }
