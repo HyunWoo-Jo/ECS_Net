@@ -5,39 +5,56 @@ using Game.Network;
 namespace Game.Mono.UI {
     public class MainSceneConnecting_UI_View : UI_View<MainSceneConnecting_UI_Presenter>
     {
-        [SerializeField] private EventTrigger _serverClientTrigger;
-        [SerializeField] private EventTrigger _clientTrigger;
+        [SerializeField] private EventTrigger _createRoomTrigger;
+        [SerializeField] private EventTrigger _roomListTrigger;
 
         // Init
         private void Start() {
-            // serverClientTrigger; / 버튼에 기능 할당
+            // create Room; / 버튼에 기능 할당
             EventTrigger.Entry ent = new() {
                 eventID = EventTriggerType.PointerDown
             };
-            ent.callback.AddListener((data) => { 
-                OnServerClientAddListener(); 
+            ent.callback.AddListener((data) => {
+                OnCreateRoomList(); 
             });
-            _serverClientTrigger.triggers.Add(ent);
+            _createRoomTrigger.triggers.Add(ent);
 
-            // client Tigger / 버튼에 기능 할당
+            // room List / 버튼에 기능 할당
             ent = new() {
                 eventID = EventTriggerType.PointerDown
             };
             ent.callback.AddListener((data) => {
-                OnClientAddListener();
+                OnCreateRoom();
             });
-            _clientTrigger.triggers.Add(ent);
+            _roomListTrigger.triggers.Add(ent);
         }
 
 
-        // button Server p2p 역활하는 client 생성
-        private void OnServerClientAddListener() {
-           // NetworkManager.Instance.LoadServerClient();
+        // roomList를 받아와 roomList ui 생성 (버튼에 항상하여 사용)
+        private void OnCreateRoomList() {
+            // NetworkManager.Instance.LoadServerClient();
+            _presenter.CreateRoomList();
         }
 
-        // button Client 연결
-        private void OnClientAddListener() {
+        // 방 생성 (버튼에 항상하여 사용)
+        private void OnCreateRoom () {
+            _presenter.CreateRoom();
            // NetworkManager.Instance.LoadClient();
+        }
+        /// <summary>
+        /// 방 ui 생성
+        /// </summary>
+        /// <param name="roomName"></param>
+        /// <param name="userName"></param>
+        private void CreateRoomUI() {
+
+        }
+        /// <summary>
+        /// main create room, room List 버튼 상태
+        /// </summary>
+        /// <param name="isActive"></param>
+        private void ActiveMainUI() {
+            
         }
     }
 }

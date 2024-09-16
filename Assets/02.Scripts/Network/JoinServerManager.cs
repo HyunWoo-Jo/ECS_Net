@@ -25,9 +25,12 @@ namespace Game.Network
 
         // listener
         public Action onConnectingListener; // 연결 완료
-        public Action<string> readMsgListener; // 메시지 수신
+        public Action failConnectingListener; // 연결 실패
+        
         public Action<string[]> roomListListener; // roomList 처리
         public Action<string[]> joinRoomListener; // join Room 처리
+
+        private Action<string> readMsgListener; // 메시지 수신
 
         private void Start() {
             //init
@@ -59,10 +62,11 @@ namespace Game.Network
             _tcpClient = new TcpClient();
             try {
                 await _tcpClient.ConnectAsync(_joinServerIP, _port).AsUniTask(); // 서버 연결
-                _stream = _tcpClient.GetStream();
-                onConnectingListener?.Invoke();
+                _stream = _tcpClient.GetStream();               
                 _ = ReadMessageAsync();
+                onConnectingListener?.Invoke();
             } catch (Exception e) {
+                failConnectingListener?.Invoke();
 #if TESTING_DEBUG
                 Debug.Log(e.Message);
 #endif
