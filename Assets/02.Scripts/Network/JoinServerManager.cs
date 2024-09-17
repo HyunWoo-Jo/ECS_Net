@@ -24,13 +24,34 @@ namespace Game.Network
         private NetworkStream _stream;
 
         // listener
-        public Action onConnectingListener; // 연결 완료
-        public Action failConnectingListener; // 연결 실패
+        private Action onConnectingListener; // 연결 완료
+        private Action failConnectingListener; // 연결 실패
         
-        public Action<string[]> roomListListener; // roomList 처리
-        public Action<string[]> joinRoomListener; // join Room 처리
+        private Action<string[]> roomListListener; // roomList 처리
+        private Action<string[]> joinRoomListener; // join Room 처리
 
         private Action<string> readMsgListener; // 메시지 수신
+
+        public void AddRoomListListener(Action<string[]> action) {
+            roomListListener += action;
+        }
+        public void AddJoinRoomListener(Action<string[]> action) { 
+            joinRoomListener += action; 
+        }
+
+        public void AddOnConnectingListener(Action action) {
+            onConnectingListener += action;
+        }
+        public void RemoveOnConnectingListener(Action action) { 
+            onConnectingListener -= action; 
+        }
+
+        public void AddFailConnectingListener(Action action) {
+            failConnectingListener += action;
+        }
+        public void RemoveFailConnectingListener(Action action) {
+            failConnectingListener -= action;
+        }
 
         private void Start() {
             //init
@@ -172,13 +193,14 @@ namespace Game.Network
             string[] roomDatas;
             List<string> roomList = new List<string>();
             switch (splitMsg[1]) {
-                case "roomList": // 방 목록 / data:roomList:roomIpHash/roomName/userName/...
+                case "roomList": // 방 목록 / data:roomList:roomIpHash/roomName/userName/isPublic...
                 roomDatas = splitMsg[2].Split("/");
-                for(int i =0;i < roomDatas.Length - 1; i += 3) {
+                for(int i =0;i < roomDatas.Length - 1; i += 4) {
                     roomList.Clear();
                     roomList.Add(roomDatas[i]);
                     roomList.Add(roomDatas[i + 1]);
                     roomList.Add(roomDatas[i + 2]);
+                    roomList.Add(roomDatas[i + 3]);
                     roomListListener?.Invoke(roomList.ToArray());
                 }
                 break;

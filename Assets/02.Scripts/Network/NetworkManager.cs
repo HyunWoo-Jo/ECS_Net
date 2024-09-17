@@ -4,6 +4,9 @@ using Unity.NetCode;
 using Unity.Networking.Transport;
 using System;
 using Unity.Entities;
+using System.Linq;
+using System.Net.NetworkInformation;
+using System.Net;
 namespace Game.Network
 {
     public enum NetworkConnectingType {
@@ -56,6 +59,22 @@ namespace Game.Network
         public void LoadServerClient() {
             _networkConnectingType = NetworkConnectingType.ServerClient;
             _loadListner?.Invoke();
+        }
+
+        public int GetUseAblePort() {
+            int startPort = 1024;  // 사용자 포트 범위 시작
+            int endPort = 65535;   // 사용자 포트 범위 끝
+
+            IPGlobalProperties properties = IPGlobalProperties.GetIPGlobalProperties();
+            IPEndPoint[] activeTcpListeners = properties.GetActiveTcpListeners();
+            int[] usedPorts = activeTcpListeners.Select(p => p.Port).ToArray();
+
+            for (int port = startPort; port <= endPort; port++) {
+                if (!usedPorts.Contains(port)) {
+                    return port;
+                }
+            }
+            return -1;
         }
  
 
