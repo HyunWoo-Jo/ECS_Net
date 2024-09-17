@@ -8,7 +8,7 @@ namespace Game.Mono.UI {
     {
         [SerializeField] private EventTrigger _createRoomTrigger;
         [SerializeField] private EventTrigger _roomListTrigger;
-        [SerializeField] private GameObject RoomUI;
+        [SerializeField] private GameObject _roomUI;
         // Init
         private void Start() {
             // create Room; / 버튼에 기능 할당
