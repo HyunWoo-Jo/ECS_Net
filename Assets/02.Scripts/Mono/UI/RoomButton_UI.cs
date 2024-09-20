@@ -15,6 +15,10 @@ namespace Game.Mono.UI
             _buttonClickListener += action;
         }
 
+        public void ClearButtonClickListener() {
+            _buttonClickListener = null;
+        }
+
         public void UpdateRoomData(RoomData roomData) {
             _roomData = roomData;
             UpdateUI();

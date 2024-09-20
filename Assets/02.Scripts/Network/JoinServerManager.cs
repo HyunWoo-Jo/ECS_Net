@@ -27,16 +27,20 @@ namespace Game.Network
         private Action onConnectingListener; // 楷搬 肯丰
         private Action failConnectingListener; // 楷搬 角菩
         
-        private Action<string[]> roomListListener; // roomList 贸府
-        private Action<string[]> joinRoomListener; // join Room 贸府
+        private Action<string[]> roomListSusListener; // roomList 贸府
+        private Action roomListFailListener; // roomList 贸府
+        private Action<string[]> joinRoomSusListener; // join Room 贸府
+        private Action joinRoomFailListener; // join Room 贸府
+        private Action joinRoomNoRoomListener; // join Room 贸府
 
-        private Action<string> readMsgListener; // 皋矫瘤 荐脚
-
-        public void AddRoomListListener(Action<string[]> action) {
-            roomListListener += action;
+        public void AddRoomListListener(Action<string[]> susAction, Action failAction) {
+            roomListSusListener += susAction;
+            roomListFailListener += failAction;
         }
-        public void AddJoinRoomListener(Action<string[]> action) { 
-            joinRoomListener += action; 
+        public void AddJoinRoomListener(Action<string[]> susAction, Action failAction, Action noRoomAction) {
+            joinRoomSusListener += susAction;
+            joinRoomFailListener += failAction;
+            joinRoomNoRoomListener += noRoomAction;
         }
 
         public void AddOnConnectingListener(Action action) {
@@ -53,12 +57,6 @@ namespace Game.Network
             failConnectingListener -= action;
         }
 
-        private void Start() {
-            //init
-            readMsgListener += (string msg) => { _  = MessageKernel(msg); };
-
-            OnTcpCleintAsync();
-        }
 
         private void OnDisable() {
             CloseTcp();
@@ -118,7 +116,7 @@ namespace Game.Network
 #if TESTING_DEBUG
                         Debug.Log("receive from join: " + completeMessage);
 #endif
-                        readMsgListener?.Invoke(completeMessage);
+                        _ = MessageKernel(completeMessage);
                         divIndex = strBulider.ToString().IndexOf('\n');
                     }
                 } catch (Exception e) {
@@ -190,25 +188,52 @@ namespace Game.Network
         /// </summary>
         /// <param name="splitMsg"></param>
         private void DataProcessor(string[] splitMsg) {
+            switch (splitMsg[1]) {
+                case "roomList": // 规 格废 
+                RoomListProcessor(splitMsg);
+                break;
+                case "joinRoom": // 规 立加
+                JoinRoomProcessor(splitMsg);
+                break;
+            }
+        }
+        // 规 格废
+        private void RoomListProcessor(string[] splitMsg) {
             string[] roomDatas;
             List<string> roomList = new List<string>();
-            switch (splitMsg[1]) {
-                case "roomList": // 规 格废 / data:roomList:roomIpHash/roomName/userName/isPublic...
+            switch (splitMsg[2]) {
+                case "sus": // 己傍 / data:roomList:SoF:roomIpHash/roomName/userName/isPublic...
                 roomDatas = splitMsg[2].Split("/");
-                for(int i =0;i < roomDatas.Length - 1; i += 4) {
+                for (int i = 0; i < roomDatas.Length - 1; i += 4) {
                     roomList.Clear();
                     roomList.Add(roomDatas[i]);
                     roomList.Add(roomDatas[i + 1]);
                     roomList.Add(roomDatas[i + 2]);
                     roomList.Add(roomDatas[i + 3]);
-                    roomListListener?.Invoke(roomList.ToArray());
+                    roomListSusListener?.Invoke(roomList.ToArray());
                 }
                 break;
-                case "joinRoom": // 规 立加 / data:joinRoom:ip/port
+                case "noRoom": // 规捞 绝澜
+                roomListFailListener?.Invoke();
+                break;
+            }            
+        }
+        // 规 立加
+        private void JoinRoomProcessor(string[] splitMsg) {
+            string[] roomDatas;
+            List<string> roomList = new List<string>();
+            switch (splitMsg[2]) {
+                case "sus": // 己傍 / data:joinRoom:SoF:ip/port
                 roomDatas = splitMsg[2].Split("/");
                 roomList.Add(roomDatas[0]);
                 roomList.Add(roomDatas[1]);
-                joinRoomListener?.Invoke(roomList.ToArray());
+                joinRoomSusListener?.Invoke(roomList.ToArray());
+                break;
+                case "fail": // 角菩
+                joinRoomFailListener?.Invoke();
+                break;
+                case "noRoom": // 规捞绝澜
+                joinRoomNoRoomListener?.Invoke();
                 break;
             }
         }

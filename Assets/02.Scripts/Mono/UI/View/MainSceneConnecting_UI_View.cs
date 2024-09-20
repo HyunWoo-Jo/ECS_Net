@@ -6,57 +6,65 @@ using Game.Network;
 namespace Game.Mono.UI {
     public class MainSceneConnecting_UI_View : UI_View<MainSceneConnecting_UI_Presenter>
     {
-        [SerializeField] private EventTrigger _createRoomTrigger;
-        [SerializeField] private EventTrigger _roomListTrigger;
-        [SerializeField] private GameObject _roomUI;
-        // Init
-        private void Start() {
-            // create Room; / 버튼에 기능 할당
-            EventTrigger.Entry ent = new() {
-                eventID = EventTriggerType.PointerDown
-            };
-            ent.callback.AddListener((data) => {
-                OnCreateRoomList(); 
-            });
-            _createRoomTrigger.triggers.Add(ent);
+        [Header("Main Button")]
+        [SerializeField] private GameObject _createRoomButton;
+        [SerializeField] private GameObject _roomListButton;
+        
+        [Header("Room")]
+        [SerializeField] private RoomButton_UI _roomUIButton;
+        [SerializeField] private GameObject _roomPanel;
+        [SerializeField] private GameObject _roomContent;
 
-            // room List / 버튼에 기능 할당
-            ent = new() {
-                eventID = EventTriggerType.PointerDown
-            };
-            ent.callback.AddListener((data) => {
-                OnCreateRoom();
-            });
-            _roomListTrigger.triggers.Add(ent);
-        }
+        [Header("Password Panel")]
+        [SerializeField] private GameObject _passwordPanel;
+        [SerializeField] private TMP_InputField _passwordInputField;
+
+        [Header("Err Panel")]
+        [SerializeField] private GameObject _errPanel;
+        [SerializeField] private TextMeshProUGUI _errText;
 
 
-        // roomList를 받아와 roomList ui 생성 (버튼에 항상하여 사용)
-        private void OnCreateRoomList() {
-            _presenter.CreateRoomList();
-        }
-
-        // 방 생성 (버튼에 항상하여 사용)
-        private void OnCreateRoom () {
-            _presenter.CreateRoom();
-        }
-        /// <summary>
-        /// 방 ui 생성
-        /// </summary>
-        /// <param name="roomName"></param>
-        /// <param name="userName"></param>
         internal void UpdateRoomUI() {
             ReadOnlyCollection<RoomData> roomDataList = _presenter.GetRoomList_RO();
             foreach (RoomData roomData in roomDataList) {
 
             }
         }
-        /// <summary>
-        /// main create room, room List 버튼 상태
-        /// </summary>
-        /// <param name="isActive"></param>
-        private void ActiveMainUI() {
-            
+       
+        internal void ShowErrText(string msg) {
+            _errPanel.SetActive(true);
+            _errText.text = msg;
+        } 
+
+        #region Button
+        // 방 생성 (버튼에 항상하여 사용)
+        public void OnCreateRoom() {
+            _presenter.CreateRoom();
         }
+        // roomList를 받아와 roomList ui 생성 (버튼에 항상하여 사용)
+        public void OnCreateRoomList() {
+            _presenter.CreateRoomList();
+        }
+        // room panel 끄기
+        public void OnCloseRoomPanel() {
+            _roomPanel.SetActive(false);
+            _createRoomButton.SetActive(true);
+            _roomListButton.SetActive(true);
+        }
+     
+
+        // pasword Input panel 끄기
+        public void OnClosePasswordPanel() {
+            _passwordPanel.gameObject.SetActive(false);
+        }
+        // Password 전송
+        public void OnEnterPassword() {
+
+        }
+        // err Panel 끄기
+        public void OnCloseErrPanel() {
+            _errPanel.gameObject.SetActive(false);
+        }
+        #endregion
     }
 }
