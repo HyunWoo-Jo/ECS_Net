@@ -10,6 +10,7 @@ using System.Text;
 using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
+using PimDeWitte.UnityMainThreadDispatcher;
 namespace Game.Network
 {
     public class JoinServerManager : Singleton<JoinServerManager>
@@ -60,6 +61,16 @@ namespace Game.Network
 
         private void OnDisable() {
             CloseTcp();
+
+        }
+        private void OnApplicationQuit() { // 종료시 초기화
+            onConnectingListener = null;
+            failConnectingListener = null;
+            roomListSusListener = null;
+            roomListFailListener = null;
+            joinRoomSusListener = null;
+            joinRoomFailListener = null;
+            joinRoomNoRoomListener = null;
         }
 
         #region tcp funtion
@@ -200,21 +211,27 @@ namespace Game.Network
         // 방 목록
         private void RoomListProcessor(string[] splitMsg) {
             string[] roomDatas;
-            List<string> roomList = new List<string>();
+            List<string> roomList = new();
             switch (splitMsg[2]) {
                 case "sus": // 성공 / data:roomList:SoF:roomIpHash/roomName/userName/isPublic...
-                roomDatas = splitMsg[2].Split("/");
+                roomDatas = splitMsg[3].Split("/");
                 for (int i = 0; i < roomDatas.Length - 1; i += 4) {
                     roomList.Clear();
                     roomList.Add(roomDatas[i]);
                     roomList.Add(roomDatas[i + 1]);
                     roomList.Add(roomDatas[i + 2]);
                     roomList.Add(roomDatas[i + 3]);
-                    roomListSusListener?.Invoke(roomList.ToArray());
+                    UnityMainThreadDispatcher.Instance().Enqueue(() => {
+                        roomListSusListener?.Invoke(roomList.ToArray());
+                    });
                 }
                 break;
                 case "noRoom": // 방이 없음
-                roomListFailListener?.Invoke();
+                Debug.Log("?");
+                UnityMainThreadDispatcher.Instance().Enqueue(() => {
+                    Debug.Log("NoRoom");
+                    roomListFailListener?.Invoke();
+                });
                 break;
             }            
         }
@@ -227,13 +244,19 @@ namespace Game.Network
                 roomDatas = splitMsg[2].Split("/");
                 roomList.Add(roomDatas[0]);
                 roomList.Add(roomDatas[1]);
-                joinRoomSusListener?.Invoke(roomList.ToArray());
+                UnityMainThreadDispatcher.Instance().Enqueue(() => {
+                    joinRoomSusListener?.Invoke(roomList.ToArray());
+                });
                 break;
                 case "fail": // 실패
-                joinRoomFailListener?.Invoke();
+                UnityMainThreadDispatcher.Instance().Enqueue(() => {
+                    joinRoomFailListener?.Invoke();
+                });
                 break;
                 case "noRoom": // 방이없음
-                joinRoomNoRoomListener?.Invoke();
+                UnityMainThreadDispatcher.Instance().Enqueue(() => {       
+                    joinRoomNoRoomListener?.Invoke();
+                });
                 break;
             }
         }

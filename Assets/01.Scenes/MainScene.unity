@@ -971,6 +971,50 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 429646708}
   m_CullTransparentMesh: 1
+--- !u!1 &458337902
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 458337904}
+  - component: {fileID: 458337903}
+  m_Layer: 0
+  m_Name: Unity MainThreadDispatcher
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &458337903
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 458337902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16173428f7358476fa784f899e396692, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &458337904
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 458337902}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 760, y: 427.49994, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &536893512
 GameObject:
   m_ObjectHideFlags: 0
@@ -2647,6 +2691,7 @@ MonoBehaviour:
   _roomListButton: {fileID: 1172110762}
   _roomUIButton: {fileID: 491320094949828925, guid: 92412ff0ed0822244a318c27f84203f1, type: 3}
   _roomPanel: {fileID: 1085225749}
+  _roomContent: {fileID: 0}
   _passwordPanel: {fileID: 1393526794}
   _passwordInputField: {fileID: 536893514}
   _errPanel: {fileID: 1952775373}
@@ -4013,3 +4058,4 @@ SceneRoots:
   - {fileID: 1913055181}
   - {fileID: 2097151440}
   - {fileID: 804422939}
+  - {fileID: 458337904}

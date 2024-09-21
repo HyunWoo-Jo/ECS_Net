@@ -11,6 +11,7 @@ namespace Game.Mono.UI {
     // 내부를 internal로 설계
     public class MainSceneConnecting_UI_Presenter : UI_Presenter<MainSceneConnecting_UI_View, MainSceneConnecting_UI_Model>
     {
+        private bool isTryConnecting = false; // 연결이 한번만 시도 되도록 설정하는 bool
         private void Start() {
             // Init
             JoinServerManager.Instance.AddRoomListListener(AddRoomListSus, ShowNoRoom); // 메시지 룸 리스트 수신
@@ -23,16 +24,19 @@ namespace Game.Mono.UI {
         internal void CreateRoom() {   
             if (JoinServerManager.Instance.ChkConnected()) { // 연결 되어 있을경우
                 SusConnectingCreateRoom();
-            } else { // 연결 안 되어 있을경우
+            } else if(!isTryConnecting) { // 연결 안 되어 있을경우
                 // sus
                 JoinServerManager.Instance.AddOnConnectingListener(() => {
                     SusConnectingCreateRoom(); // 방 생성
                     JoinServerManager.Instance.RemoveOnConnectingListener(SusConnectingCreateRoom); // 초기화
+                    isTryConnecting = false;
                 });
                 // fail
                 JoinServerManager.Instance.AddFailConnectingListener(() => {
+                    isTryConnecting = false;
                     _view.ShowErrText("서버와 연결을 실패하였습니다.");
                 });
+                isTryConnecting = true;
                 JoinServerManager.Instance.OnTcpCleintAsync();
             }
 
@@ -44,15 +48,19 @@ namespace Game.Mono.UI {
             
             if (JoinServerManager.Instance.ChkConnected()) { // 연결 되어 있을경우
                 SusConeectingReqeustRoom();
-            } else { // 연결 안 되어 있을경우
+            } else if (!isTryConnecting) { // 연결 안 되어 있을경우
                 // sus
                 JoinServerManager.Instance.AddOnConnectingListener(() => {
                     SusConeectingReqeustRoom(); // 방 목록 요청 
                     JoinServerManager.Instance.RemoveOnConnectingListener(SusConeectingReqeustRoom); // 초기화
+                    isTryConnecting = false;
                 });
                 // fail
-                JoinServerManager.Instance.AddFailConnectingListener(() => { });
-
+                JoinServerManager.Instance.AddFailConnectingListener(() => { 
+                    isTryConnecting = false;
+                    _view.ShowErrText("서버와 연결을 실패하였습니다.");
+                });
+                isTryConnecting = true;
                 JoinServerManager.Instance.OnTcpCleintAsync();
             }
         }
@@ -72,6 +80,7 @@ namespace Game.Mono.UI {
             if (port != -1) { // 사용 가능 포트가 존재
                 NetworkManager.Instance.SetPort(Convert.ToUInt16(port));
                 NetworkManager.Instance.LoadServerClient();
+                JoinServerManager.Instance.CreateRoom(port.ToString(), "test", "roomdName");
             } else { 
                 _view.ShowErrText("사용 가능한 포트가 존재하지 않습니다");
             }
@@ -108,7 +117,6 @@ namespace Game.Mono.UI {
         /// Room이 존재하지 않음
         /// </summary>
         private void ShowNoRoom() {
-            Debug.Log("?");
             _view.ShowErrText("방이 존재하지 않습니다.");
         }
         /// <summary>
