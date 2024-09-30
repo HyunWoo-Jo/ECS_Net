@@ -22,7 +22,7 @@ namespace Game.Mono.UI {
         /// 방 생성 로직
         /// </summary>
         internal void CreateRoom() {   
-            if (JoinServerManager.Instance.ChkConnected()) { // 연결 되어 있을경우
+            if (JoinServerManager.Instance.IsChkConnected()) { // 연결 되어 있을경우
                 SusConnectingCreateRoom();
             } else if(!isTryConnecting) { // 연결 안 되어 있을경우
                 // sus
@@ -46,7 +46,7 @@ namespace Game.Mono.UI {
         /// </summary>
         internal void CreateRoomList() {
             
-            if (JoinServerManager.Instance.ChkConnected()) { // 연결 되어 있을경우
+            if (JoinServerManager.Instance.IsChkConnected()) { // 연결 되어 있을경우
                 SusConeectingReqeustRoom();
             } else if (!isTryConnecting) { // 연결 안 되어 있을경우
                 // sus

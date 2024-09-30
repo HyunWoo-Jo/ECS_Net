@@ -15,10 +15,23 @@ MonoBehaviour:
   m_GroupName: UI
   m_GUID: 047027728e5a7e94c95a2a256af5272b
   m_SerializeEntries:
-  - m_GUID: bc9caac427995f0498ab93d01125a1c2
-    m_Address: Popup_Err
+  - m_GUID: 79f3f3e1635a52e4ebaa48bc9d1bc76b
+    m_Address: UI_RoomList_Panel.prefab
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - MainScene
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 92412ff0ed0822244a318c27f84203f1
+    m_Address: UI_Room_Button.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - MainScene
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bc9caac427995f0498ab93d01125a1c2
+    m_Address: UI_Popup_Err_Panel.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Frequently
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 96ec70ba57b05b54b8dc48053f15f7cd, type: 2}

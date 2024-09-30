@@ -28,5 +28,12 @@ namespace Game.Mono
             GameObject obj = Instantiate(prefab);
             endAction(obj);
         }
+
+        /// <summary>
+        /// 자주 사용하는 에셋에 대한 로드
+        /// </summary>
+        private async void PreLoad(string label) {
+
+        }
     }
 }

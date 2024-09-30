@@ -34,6 +34,9 @@ namespace Game.Network
         private Action joinRoomFailListener; // join Room 처리
         private Action joinRoomNoRoomListener; // join Room 처리
 
+        // bool
+        private bool _isWork = false; // 연결, 조인 등 작업중인가 확인
+        public bool IsWork { get { return _isWork; } }
         public void AddRoomListListener(Action<string[]> susAction, Action failAction) {
             roomListSusListener += susAction;
             roomListFailListener += failAction;
@@ -43,10 +46,17 @@ namespace Game.Network
             joinRoomFailListener += failAction;
             joinRoomNoRoomListener += noRoomAction;
         }
-
+        /// <summary>
+        /// 서버 연결 성공시 한번만 작동
+        /// </summary>
+        /// <param name="action"></param>
         public void AddOnConnectingListener(Action action) {
             onConnectingListener += action;
         }
+        /// <summary>
+        /// 서버 연결 실패시 한번만 작동
+        /// </summary>
+        /// <param name="action"></param>
         public void RemoveOnConnectingListener(Action action) { 
             onConnectingListener -= action; 
         }
@@ -78,7 +88,7 @@ namespace Game.Network
         /// tcp 연결되어 있나 확인
         /// </summary>
         /// <returns></returns>
-        public bool ChkConnected() {
+        public bool IsChkConnected() {
             if(_tcpClient != null && _tcpClient.Connected) {
                 return true;
             }
@@ -90,17 +100,22 @@ namespace Game.Network
         /// <returns></returns>
         public async void OnTcpCleintAsync() {
             _tcpClient = new TcpClient();
+            _isWork = true;
             try {
                 await _tcpClient.ConnectAsync(_joinServerIP, _port).AsUniTask(); // 서버 연결
                 _stream = _tcpClient.GetStream();               
                 _ = ReadMessageAsync();
-                onConnectingListener?.Invoke();
+                onConnectingListener?.Invoke();                
             } catch (Exception e) {
                 failConnectingListener?.Invoke();
+                
 #if TESTING_DEBUG
                 Debug.Log(e.Message);
 #endif
             }
+            onConnectingListener = null;
+            failConnectingListener = null;
+            _isWork = false;
         }
 
         /// <summary>
@@ -136,6 +151,7 @@ namespace Game.Network
 #endif
                     break;
                 }
+                _isWork = false;
             }
         }
         /// <summary>
@@ -144,6 +160,7 @@ namespace Game.Network
         /// <param name="msg"></param>
         public async UniTask SendMessageAsync(string msg) {
             try {
+                _isWork = true; // 서버에서 응답이 오면 ReadMessageAsync에서 false 처리
                 byte[] buffer = Encoding.UTF8.GetBytes(msg + '\n');
                 await _stream.WriteAsync(buffer, 0, buffer.Length);
 #if TESTING_DEBUG

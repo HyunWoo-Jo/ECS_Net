@@ -57,8 +57,8 @@ namespace Game.Mono.UI
     }
 }" + "\r\n";
             vText = frontText + string.Format("\tpublic class {0}_UI_View : UI_View<{0}_UI_Presenter>, IView\r\n\t{{", fileName) + endText;
-            pText = frontText + string.Format("\tpublic class {0}_UI_Presenter : UI_Presenter<{0}_UI_View, {0}_UI_Model>, IPresenter\r\n\t{{", fileName) + endText;
-            mText = frontText + string.Format("\tpublic class {0}_UI_Model : UI_Model<{0}_UI_Presenter>, IModel\r\n\t{{", fileName) + endText;
+            pText = frontText + string.Format("\tpublic class {0}_UI_Presenter : UI_Presenter<{0}_UI_View, {0}_UI_Model>, IPresenter\r\n\t{{\t// internal", fileName) + endText;
+            mText = frontText + string.Format("\tpublic class {0}_UI_Model : UI_Model<{0}_UI_Presenter>, IModel\r\n\t{{\t// internal", fileName) + endText;
 
             File.WriteAllText(viewPath, vText);
             File.WriteAllText(prePath, pText);
