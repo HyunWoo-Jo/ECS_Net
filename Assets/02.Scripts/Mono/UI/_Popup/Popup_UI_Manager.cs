@@ -7,7 +7,7 @@ namespace Game.Mono.UI
 {
     public enum POPUP_UI {
         ERR_UI,
-
+        ROOMLIST_UI
     }
     public class Popup_UI_Manager : Singleton<Popup_UI_Manager>
     {
@@ -33,6 +33,10 @@ namespace Game.Mono.UI
 
         public void GetPopupUI(POPUP_UI popup) {
             
-       }
+        }
+
+        public void CloseUI(Popup popup) {
+            _popupList.Remove(popup);
+        }
     }
 }

@@ -5497,10 +5497,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3794176887030668848, guid: bc9caac427995f0498ab93d01125a1c2, type: 3}
-      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 5278020021516721843, guid: bc9caac427995f0498ab93d01125a1c2, type: 3}
       propertyPath: m_Name
       value: Err_Panel
