@@ -18,7 +18,7 @@ namespace Game.Mono.UI
         }
 
 
-        internal override void OnCreate() {
+        internal override void OnOpen() {
             _enterButton.AddDownButton(OnClose); // 버튼에 종료 버튼 추가
         }
 

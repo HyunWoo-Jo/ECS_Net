@@ -61,6 +61,7 @@ MonoBehaviour:
   m_GroupAssets:
   - {fileID: 11400000, guid: 5696f68385d6ed94ab03a08697f5abdd, type: 2}
   - {fileID: 11400000, guid: 7b31880dbb578884badab2354eadec2c, type: 2}
+  - {fileID: 11400000, guid: b6994f1cdc3839743bac77daec404e99, type: 2}
   m_BuildSettings:
     m_LogResourceManagerExceptions: 1
     m_BundleBuildPath: Temp/com.unity.addressables/AssetBundles

@@ -3,7 +3,7 @@ using System;
 using TMPro;
 namespace Game.Mono.UI
 {
-    public class RoomButton_UI : MonoBehaviour
+    public class RoomButton_UI : MonoBehaviour, ILoadAble   
     {
         private RoomData _roomData;
         [SerializeField] private TextMeshProUGUI _userNameText;
