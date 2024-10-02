@@ -25,47 +25,47 @@ namespace Game.Network
         private NetworkStream _stream;
 
         // listener
-        private Action onConnectingListener; // 연결 완료
-        private Action failConnectingListener; // 연결 실패
+        private Action _onConnectingListener; // 연결 완료
+        private Action _failConnectingListener; // 연결 실패
         
-        private Action<string[]> roomListSusListener; // roomList 처리
-        private Action roomListFailListener; // roomList 처리
-        private Action<string[]> joinRoomSusListener; // join Room 처리
-        private Action joinRoomFailListener; // join Room 처리
-        private Action joinRoomNoRoomListener; // join Room 처리
+        private Action<string[]> _roomListSusListener; // roomList 처리
+        private Action _roomListFailListener; // roomList 처리
+        private Action<string[]> _joinRoomSusListener; // join Room 처리
+        private Action _joinRoomFailListener; // join Room 처리
+        private Action _joinRoomNoRoomListener; // join Room 처리
 
         // bool
         private bool _isWork = false; // 연결, 조인 등 작업중인가 확인
         public bool IsWork { get { return _isWork; } }
         public void AddRoomListListener(Action<string[]> susAction, Action failAction) {
-            roomListSusListener += susAction;
-            roomListFailListener += failAction;
+            _roomListSusListener += susAction;
+            _roomListFailListener += failAction;
         }
         public void AddJoinRoomListener(Action<string[]> susAction, Action failAction, Action noRoomAction) {
-            joinRoomSusListener += susAction;
-            joinRoomFailListener += failAction;
-            joinRoomNoRoomListener += noRoomAction;
+            _joinRoomSusListener += susAction;
+            _joinRoomFailListener += failAction;
+            _joinRoomNoRoomListener += noRoomAction;
         }
         /// <summary>
         /// 서버 연결 성공시 한번만 작동
         /// </summary>
         /// <param name="action"></param>
         public void AddOnConnectingListener(Action action) {
-            onConnectingListener += action;
+            _onConnectingListener += action;
         }
         /// <summary>
         /// 서버 연결 실패시 한번만 작동
         /// </summary>
         /// <param name="action"></param>
         public void RemoveOnConnectingListener(Action action) { 
-            onConnectingListener -= action; 
+            _onConnectingListener -= action; 
         }
 
         public void AddFailConnectingListener(Action action) {
-            failConnectingListener += action;
+            _failConnectingListener += action;
         }
         public void RemoveFailConnectingListener(Action action) {
-            failConnectingListener -= action;
+            _failConnectingListener -= action;
         }
 
 
@@ -74,13 +74,13 @@ namespace Game.Network
 
         }
         private void OnApplicationQuit() { // 종료시 초기화
-            onConnectingListener = null;
-            failConnectingListener = null;
-            roomListSusListener = null;
-            roomListFailListener = null;
-            joinRoomSusListener = null;
-            joinRoomFailListener = null;
-            joinRoomNoRoomListener = null;
+            _onConnectingListener = null;
+            _failConnectingListener = null;
+            _roomListSusListener = null;
+            _roomListFailListener = null;
+            _joinRoomSusListener = null;
+            _joinRoomFailListener = null;
+            _joinRoomNoRoomListener = null;
         }
 
         #region tcp funtion
@@ -105,16 +105,16 @@ namespace Game.Network
                 await _tcpClient.ConnectAsync(_joinServerIP, _port).AsUniTask(); // 서버 연결
                 _stream = _tcpClient.GetStream();               
                 _ = ReadMessageAsync();
-                onConnectingListener?.Invoke();                
+                _onConnectingListener?.Invoke();                
             } catch (Exception e) {
-                failConnectingListener?.Invoke();
+                _failConnectingListener?.Invoke();
                 
 #if TESTING_DEBUG
                 Debug.Log(e.Message);
 #endif
             }
-            onConnectingListener = null;
-            failConnectingListener = null;
+            _onConnectingListener = null;
+            _failConnectingListener = null;
             _isWork = false;
         }
 
@@ -239,15 +239,13 @@ namespace Game.Network
                     roomList.Add(roomDatas[i + 2]);
                     roomList.Add(roomDatas[i + 3]);
                     UnityMainThreadDispatcher.Instance().Enqueue(() => {
-                        roomListSusListener?.Invoke(roomList.ToArray());
+                        _roomListSusListener?.Invoke(roomList.ToArray());
                     });
                 }
                 break;
                 case "noRoom": // 방이 없음
-                Debug.Log("?");
                 UnityMainThreadDispatcher.Instance().Enqueue(() => {
-                    Debug.Log("NoRoom");
-                    roomListFailListener?.Invoke();
+                    _roomListFailListener?.Invoke();
                 });
                 break;
             }            
@@ -262,17 +260,17 @@ namespace Game.Network
                 roomList.Add(roomDatas[0]);
                 roomList.Add(roomDatas[1]);
                 UnityMainThreadDispatcher.Instance().Enqueue(() => {
-                    joinRoomSusListener?.Invoke(roomList.ToArray());
+                    _joinRoomSusListener?.Invoke(roomList.ToArray());
                 });
                 break;
                 case "fail": // 실패
                 UnityMainThreadDispatcher.Instance().Enqueue(() => {
-                    joinRoomFailListener?.Invoke();
+                    _joinRoomFailListener?.Invoke();
                 });
                 break;
                 case "noRoom": // 방이없음
                 UnityMainThreadDispatcher.Instance().Enqueue(() => {       
-                    joinRoomNoRoomListener?.Invoke();
+                    _joinRoomNoRoomListener?.Invoke();
                 });
                 break;
             }

@@ -40,13 +40,12 @@ namespace Game.Mono.UI
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="actioon"></param>
-        public void InstanceUI<T>(Action<GameObject> action = null) where T : ILoadAble {
-            ResourceManager.Instance.LoadInstance(typeof(T).Name, (obj) => {
-                Vector3 position = obj.transform.position;
-                obj.transform.SetParent(_MainCanvas.transform);
-                obj.transform.localPosition = position;
-                action?.Invoke(obj);
-            });
+        public GameObject InstanceUI<T>() where T : ILoadAble {
+            GameObject obj = ResourceManager.Instance.LoadInstance(typeof(T).Name);
+            Vector3 position = obj.transform.position;
+            obj.transform.SetParent(_MainCanvas.transform);
+            obj.transform.localPosition = position;
+            return obj;
         }
 
         /// <summary>
@@ -54,14 +53,11 @@ namespace Game.Mono.UI
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="action"></param>
-        public void InstancePopupUI<T>(Action<GameObject> action = null) where T : Popup {
-            ResourceManager.Instance.LoadInstance(typeof(T).Name, (obj) => {
-                Vector3 position = obj.transform.position;
-                obj.transform.SetParent(_MainCanvas.transform);
-                obj.transform.localPosition = position;
-                obj.GetComponent<T>().OnOpen(); // open 함수 실행
-                action?.Invoke(obj);
-            });
+        public T InstancePopupUI<T>() where T : Popup {
+            GameObject obj = InstanceUI<T>();
+            T popup = obj.GetComponent<T>();
+            popup.OnOpen();
+            return popup;
         }
         /// <summary>
         /// popup 제거

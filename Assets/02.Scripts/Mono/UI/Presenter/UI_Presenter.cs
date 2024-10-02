@@ -17,10 +17,8 @@ namespace Game.Mono.UI
         /// </summary>
         /// <param name="str"></param>
         protected virtual void ShowErrUI(string str) {
-            UI_Manager.Instance.InstancePopupUI<Err_UI_Popup>((obj) => {
-                Err_UI_Popup errPopup = obj.GetComponent<Err_UI_Popup>();
-                errPopup.UpdateText(str);
-            });         
+            Err_UI_Popup popup = UI_Manager.Instance.InstancePopupUI<Err_UI_Popup>();
+            popup.UpdateText(str);
         }
     }
 }
