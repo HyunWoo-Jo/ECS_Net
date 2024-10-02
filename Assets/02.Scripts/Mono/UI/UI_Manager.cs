@@ -30,9 +30,7 @@ namespace Game.Mono.UI
 
 
         private List<Popup> _popupList = new(); // 현재 popup 목록
-        private void Start() {
-            InstancePopupUI<Err_UI_Popup>(null);
-        }
+
         private Canvas FindMainCanvas() {
             return GameObject.FindWithTag("MainCanvas").GetComponent<Canvas>();
         }
@@ -44,7 +42,9 @@ namespace Game.Mono.UI
         /// <param name="actioon"></param>
         public void InstanceUI<T>(Action<GameObject> action = null) where T : ILoadAble {
             ResourceManager.Instance.LoadInstance(typeof(T).Name, (obj) => {
+                Vector3 position = obj.transform.position;
                 obj.transform.SetParent(_MainCanvas.transform);
+                obj.transform.localPosition = position;
                 action?.Invoke(obj);
             });
         }
@@ -55,9 +55,10 @@ namespace Game.Mono.UI
         /// <typeparam name="T"></typeparam>
         /// <param name="action"></param>
         public void InstancePopupUI<T>(Action<GameObject> action = null) where T : Popup {
-            Debug.Log(typeof(T).Name);
             ResourceManager.Instance.LoadInstance(typeof(T).Name, (obj) => {
+                Vector3 position = obj.transform.position;
                 obj.transform.SetParent(_MainCanvas.transform);
+                obj.transform.localPosition = position;
                 obj.GetComponent<T>().OnOpen(); // open 함수 실행
                 action?.Invoke(obj);
             });

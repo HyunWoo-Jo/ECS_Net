@@ -14,7 +14,8 @@ namespace Game.Mono
             MainScene,
             Frequently
         }
-        UniTask loadState;
+        private UniTask _loadState;
+        private bool _isLoadCsvCompleted = false;
         private Dictionary<string, string> _key_Dic = new(); // addressable key가 저장되있는 딕셔너리 (key = script name)
         private Dictionary<string, List<GameObject>> _preLoad_Dic_List = new(); // 자주 사용하는 오브 젝트를 미리 로드하여 참조 보관하는 딕셔너리 리스트
         /// <summary>
@@ -31,10 +32,12 @@ namespace Game.Mono
 
         public override void Awake() {
             base.Awake();
-            loadState = LoadCsv();
+            _loadState = LoadCsv();
+
         }
         // key data 링크 csv를 로드 하는 코드
         private async UniTask LoadCsv() {
+            if (_isLoadCsvCompleted) return;
             string key = "addressableData.csv";
             var csv = await Addressables.LoadAssetAsync<TextAsset>(key).ToUniTask(); // open csv
             string[] lineStrs = csv.text.Split("\n");
@@ -44,9 +47,13 @@ namespace Game.Mono
                     _key_Dic.Add(keyAndData[0], keyAndData[1]);
                 }
             }
-            Debug.Log("끝");
+            _isLoadCsvCompleted = true;
         }
-
+        private async UniTask IsLoadChk() {
+            if (!_isLoadCsvCompleted) {
+                await _loadState;
+            }
+        }
 
         /// <summary>
         /// 에셋 로드후 생성
@@ -54,7 +61,7 @@ namespace Game.Mono
         /// <param name="key"></param>
         /// <param name="endAction"></param>
         public async void LoadInstance(string key, Action<GameObject> endAction) {
-            await loadState;
+            await IsLoadChk();
             string addName = _key_Dic[key];
             GameObject prefab = await Addressables.LoadAssetAsync<GameObject>(addName).ToUniTask();
             GameObject obj = GameObject.Instantiate(prefab);

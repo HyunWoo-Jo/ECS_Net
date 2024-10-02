@@ -11,5 +11,16 @@ namespace Game.Mono.UI
             _view = this.GetComponent<T>();
             _model = this.GetComponent<U>();
         }
+
+        /// <summary>
+        /// Err Popup Ãâ·Â
+        /// </summary>
+        /// <param name="str"></param>
+        protected virtual void ShowErrUI(string str) {
+            UI_Manager.Instance.InstancePopupUI<Err_UI_Popup>((obj) => {
+                Err_UI_Popup errPopup = obj.GetComponent<Err_UI_Popup>();
+                errPopup.UpdateText(str);
+            });         
+        }
     }
 }

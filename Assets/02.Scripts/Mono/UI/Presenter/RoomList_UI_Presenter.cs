@@ -7,18 +7,22 @@ namespace Game.Mono.UI
 {
 	public class RoomList_UI_Presenter : UI_Presenter<RoomList_UI_View, RoomList_UI_Model>, IPresenter
 	{
+        private bool _isWork = false; // 한번만 동작 하도록 체크하는 변수
         private void Start() {
             // init
             JoinServerManager.Instance.AddRoomListListener(SusRequest, FailRequest);
         }
 
         internal void RequestRoom() {
-            if(JoinServerManager.Instance.IsChkConnected()) {
+            if (_isWork) return;
+            _isWork = true;
+            if (JoinServerManager.Instance.IsChkConnected()) {
                 JoinServerRequestRoom();
             } else {
                 JoinServerManager.Instance.AddOnConnectingListener(JoinServerRequestRoom);
                 JoinServerManager.Instance.AddFailConnectingListener(() => { 
-                    ShowErrUI("서버에 연결에 실패했습니다."); 
+                    ShowErrUI("서버에 연결에 실패했습니다.");
+                    _isWork = false;
                 });
                 JoinServerManager.Instance.OnTcpCleintAsync();
             }
@@ -41,13 +45,17 @@ namespace Game.Mono.UI
             }
             // ui 갱신
             _view.ShowRoomUI(_model.GetRoomDataList_RO()); // model의 데이터를 view에 전달
-
+            UI_Manager.Instance.InstancePopupUI<RoomList_UI_Popup>((obj) => {
+                RoomList_UI_Popup roomPopup = obj.GetComponent<RoomList_UI_Popup>();
+            });
+            _isWork = false;
         }
         /// <summary>
         /// 실패했을경우 (no Room)
         /// </summary>
 		private void FailRequest() {
             ShowErrUI("방 목록이 존재하지 않습니다.");
+            _isWork = false;
         }
         /// <summary>
         /// JoinServer에 방 요청
@@ -55,9 +63,7 @@ namespace Game.Mono.UI
         private void JoinServerRequestRoom() {
             JoinServerManager.Instance.RequestRoom();
         }
-        private void ShowErrUI(string str) {
-
-        }
+        
 
 
     }

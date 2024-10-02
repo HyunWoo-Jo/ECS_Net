@@ -15,10 +15,6 @@ namespace Game.Mono.UI
 		[SerializeField] private GameObject _roomButtonUI;
 		private List<GameObject> _roomButtonUIList = new();
 
-		[Header("Room Button Panel")]
-		[SerializeField] private GameObject _roomList_panel;
-		[SerializeField] private Transform _content_tr;
-
         private void Start() {
 			// init
 			Assign2Button(_roomListButton, OnRoomListButton);
