@@ -35,6 +35,18 @@ namespace Game.Mono.UI
             return GameObject.FindWithTag("MainCanvas").GetComponent<Canvas>();
         }
         
+        public GameObject LoadPrefab<T>() where T : ILoadAble {
+            return ResourceManager.Instance.LoadInstance(typeof(T).Name);
+        }
+
+        /// <summary>
+        /// prefab을 unload하는 함수
+        /// </summary>
+        /// <param name="prefab"></param>
+        public void UnLoadPrefab(GameObject prefab) {
+            ResourceManager.Instance.UnLoadPrefab(prefab);
+        }
+
         /// <summary>
         /// UI 생성
         /// </summary>
@@ -44,6 +56,7 @@ namespace Game.Mono.UI
             GameObject obj = ResourceManager.Instance.LoadInstance(typeof(T).Name);
             Vector3 position = obj.transform.position;
             obj.transform.SetParent(_MainCanvas.transform);
+            obj.transform.localScale = Vector3.one;
             obj.transform.localPosition = position;
             return obj;
         }

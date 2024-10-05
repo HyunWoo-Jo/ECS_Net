@@ -44,8 +44,8 @@ namespace Game.Mono.UI
                 _model.AddRoomData(roomData);
             }
             // ui 갱신
-            _view.ShowRoomUI(_model.GetRoomDataList_RO()); // model의 데이터를 view에 전달
             RoomList_UI_Popup popup =  UI_Manager.Instance.InstancePopupUI<RoomList_UI_Popup>();
+            _view.ShowRoomUI(popup, _model.GetRoomDataList_RO()); // model의 데이터를 view에 전달
             _isWork = false;
         }
         /// <summary>

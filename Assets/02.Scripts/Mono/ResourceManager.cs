@@ -35,7 +35,6 @@ namespace Game.Mono
         }
         // key data 링크 csv를 로드 하는 코드
         private async UniTask LoadCsv() {
-            Debug.Log("실행");
             string key = "addressableData.csv";
             var csv = await Addressables.LoadAssetAsync<TextAsset>(key).ToUniTask(); // open csv
             string[] lineStrs = csv.text.Split("\n");
@@ -46,6 +45,11 @@ namespace Game.Mono
                 }
             }
         }
+        public GameObject LoadPrefab(string key) {
+            string addName = _key_Dic[key];
+            return Addressables.LoadAssetAsync<GameObject>(addName).WaitForCompletion();
+        }
+
 
         /// <summary>
         /// 에셋 로드후 생성
@@ -65,10 +69,18 @@ namespace Game.Mono
         public async void PreLoad(Label label) {
             string key = label.ToString();
             var loadObjList = await Addressables.LoadAssetsAsync<GameObject>(key).ToUniTask();
-            for(int i =0;i< loadObjList.Count; i++) {
+            for (int i = 0; i < loadObjList.Count; i++) {
                 AddDicList(key, loadObjList[i]);
             }
         }
+        /// <summary>
+        /// prefab unload
+        /// </summary>
+        /// <param name="prefab"></param>
+        public void UnLoadPrefab(GameObject prefab) {
+            Addressables.Release(prefab);
+        }
+
         /// <summary>
         /// Instance한 리소스를 언로드
         /// </summary>

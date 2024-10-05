@@ -1300,7 +1300,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _roomListButton: {fileID: 1172110767}
-  _roomButtonUI: {fileID: 2155002051396943325, guid: 92412ff0ed0822244a318c27f84203f1, type: 3}
 --- !u!1 &1172110762
 GameObject:
   m_ObjectHideFlags: 0
