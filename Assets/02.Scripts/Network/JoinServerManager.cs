@@ -256,7 +256,7 @@ namespace Game.Network
             List<string> roomList = new List<string>();
             switch (splitMsg[2]) {
                 case "sus": // ¼º°ø / data:joinRoom:SoF:ip/port
-                roomDatas = splitMsg[2].Split("/");
+                roomDatas = splitMsg[3].Split("/");
                 roomList.Add(roomDatas[0]);
                 roomList.Add(roomDatas[1]);
                 UnityMainThreadDispatcher.Instance().Enqueue(() => {

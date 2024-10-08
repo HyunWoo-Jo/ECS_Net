@@ -2,6 +2,7 @@ using UnityEngine;
 using Game.Mono;
 using UnityEngine.EventSystems;
 using Game.Utills;
+using Game.Network;
 namespace Game.Mono.UI
 {
     public class RoomList_UI_Popup : Popup
@@ -9,7 +10,7 @@ namespace Game.Mono.UI
         [SerializeField] private RectTransform _content;
         [SerializeField] private EventTrigger _backButton;
         internal override void OnOpen() {
-            _backButton.AddDownButton(OnClose);
+            _backButton.AddDownButton(OnCloseButton);
         }
 
         internal override void OnClose() {
@@ -29,9 +30,11 @@ namespace Game.Mono.UI
         /// <summary>
         /// Back button
         /// </summary>
-        public void OnCloseButton() {
+        private void OnCloseButton() {
             OnClose();
         }
+
+
 
        
     }

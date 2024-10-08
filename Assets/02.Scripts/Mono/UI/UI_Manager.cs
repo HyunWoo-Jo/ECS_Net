@@ -81,5 +81,10 @@ namespace Game.Mono.UI
             ResourceManager.Instance.UnLoad(popup.gameObject);
             Destroy(popup.gameObject);
         }
+
+       internal void ShowErrPopup(string str) {
+            Err_UI_Popup popup = InstancePopupUI<Err_UI_Popup>();
+            popup.UpdateText(str);
+        }
     }
 }

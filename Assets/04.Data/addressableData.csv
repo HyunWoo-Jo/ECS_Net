@@ -1,3 +1,5 @@
 Err_UI_Popup,UI_Popup_Err_Panel.prefab,
 RoomList_UI_Popup,UI_RoomList_Panel.prefab,
 RoomButton_UI,UI_Room_Button.prefab,
+Password_UI_Popup,UI_Popup_Password_Panel.prefab,
+CreateRoom_UI_Popup,UI_Popup_CreateRoom_Panel.prefab,

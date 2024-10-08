@@ -37,10 +37,6 @@ namespace Game.Mono.UI
 
 			}
 		}
-		internal void HideRoom() {
-
-		}
-
 
         #region button
         private void OnRoomListButton() {
