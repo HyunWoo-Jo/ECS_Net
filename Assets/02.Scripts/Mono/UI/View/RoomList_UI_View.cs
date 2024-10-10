@@ -18,7 +18,9 @@ namespace Game.Mono.UI
         }
 
         private void OnDisable() {
-			UI_Manager.Instance.UnLoadPrefab(_roomButtonUI_prefab);
+			if (_roomButtonUI_prefab != null) {
+				UI_Manager.Instance.UnLoadPrefab(_roomButtonUI_prefab);
+			}
         }
         internal void ShowRoomUI(RoomList_UI_Popup popup, ReadOnlyCollection<RoomData> roomDataList_RO) {
 			if(_roomButtonUI_prefab == null) _roomButtonUI_prefab = UI_Manager.Instance.LoadPrefab<RoomButton_UI>(); // load
