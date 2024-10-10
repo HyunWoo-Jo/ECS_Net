@@ -14,7 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_GroupName: Packed Assets
   m_GUID: 3519d03aad17cd64883851700fec74f5
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: 9fba1f76fb30cde4f8924f9cf1cbfc89
+    m_Address: UI_Popup_CreateRoom_Panel.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e5261262066905e49aa52cd220b20e1b
+    m_Address: UI_Popup_Password_Panel.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 96ec70ba57b05b54b8dc48053f15f7cd, type: 2}
   m_SchemaSet:

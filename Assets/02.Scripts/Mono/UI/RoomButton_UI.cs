@@ -1,6 +1,9 @@
 using UnityEngine;
 using System;
 using TMPro;
+using UnityEngine.EventSystems;
+using Game.Utills;
+using Game.Network;
 namespace Game.Mono.UI
 {
     public class RoomButton_UI : MonoBehaviour, ILoadAble   
@@ -8,33 +11,36 @@ namespace Game.Mono.UI
         private RoomData _roomData;
         [SerializeField] private TextMeshProUGUI _userNameText;
         [SerializeField] private TextMeshProUGUI _roomNameText;
-        [SerializeField] private GameObject _isPublic;
-        private Action<string> _buttonClickListener; 
+        [SerializeField] private GameObject _isPublicText;
+        private Action<string> _buttonClickListener;
 
-        public void AddButtonClickListener(Action<string> action) {
-            _buttonClickListener += action;
+        [Header("Button")]
+        [SerializeField] private EventTrigger _joinButton;
+        private void Awake() {
+            _joinButton.AddDownButton(OnButtonDown);
         }
-
-        public void ClearButtonClickListener() {
-            _buttonClickListener = null;
-        }
-
         public void UpdateRoomData(RoomData roomData) {
             _roomData = roomData;
             UpdateUI();
         }
 
-        public void OnButtonDown() {
-            _buttonClickListener?.Invoke(_roomData.roomHash); // 클릭시 hash를 전달
+        private void OnButtonDown() {
+            if (_roomData.isPublic) { // 공개방
+                JoinServerManager.Instance.JoinRoom(_roomData.roomHash); // 연결
+
+            } else { // 비공개방
+                Password_UI_Popup popup = UI_Manager.Instance.InstancePopupUI<Password_UI_Popup>();
+                popup.SetRoomData(_roomData);
+            }
         }
 
         private void UpdateUI() {
             _userNameText.text = _roomData.userName;
             _roomNameText.text = _roomData.roomName;
             if (_roomData.isPublic) {
-                _isPublic.SetActive(false);
+                _isPublicText.SetActive(false);
             } else {
-                _isPublic.SetActive(true);
+                _isPublicText.SetActive(true);
             }
         }
 

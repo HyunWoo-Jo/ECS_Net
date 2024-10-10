@@ -9,8 +9,10 @@ namespace Game.Mono.UI
 	{
         private bool _isWork = false; // 한번만 동작 하도록 체크하는 변수
         private void Start() {
-            // init
+            // init 방생성 초기화
             JoinServerManager.Instance.AddRoomListListener(SusRequest, FailRequest);
+            // Join 초기화
+            JoinServerManager.Instance.AddJoinRoomListener(SusJoin, FailJoin, NotExistJoinRoom);
         }
 
         internal void RequestRoom() {
@@ -44,10 +46,8 @@ namespace Game.Mono.UI
                 _model.AddRoomData(roomData);
             }
             // ui 갱신
-            _view.ShowRoomUI(_model.GetRoomDataList_RO()); // model의 데이터를 view에 전달
-            UI_Manager.Instance.InstancePopupUI<RoomList_UI_Popup>((obj) => {
-                RoomList_UI_Popup roomPopup = obj.GetComponent<RoomList_UI_Popup>();
-            });
+            RoomList_UI_Popup popup =  UI_Manager.Instance.InstancePopupUI<RoomList_UI_Popup>();
+            _view.ShowRoomUI(popup, _model.GetRoomDataList_RO()); // model의 데이터를 view에 전달
             _isWork = false;
         }
         /// <summary>
@@ -63,7 +63,29 @@ namespace Game.Mono.UI
         private void JoinServerRequestRoom() {
             JoinServerManager.Instance.RequestRoom();
         }
-        
+
+        /// <summary>
+        /// 방 연결 성공 ip port 받아 연결
+        /// </summary>
+        /// <param name="msg"></param>
+        private void SusJoin(string[] msg) {
+            NetworkManager.Instance.SetIP(msg[0]);
+            NetworkManager.Instance.SetPort(Convert.ToUInt16(msg[1]));
+            NetworkManager.Instance.LoadClient();
+
+        }
+        /// <summary>
+        /// 연결 실패 비밀번호 
+        /// </summary>
+        private void FailJoin() {
+            ShowErrUI("비밀번호가 다릅니다.");
+        }
+        /// <summary>
+        /// 방이 존재하지 않음
+        /// </summary>
+        private void NotExistJoinRoom() {
+            ShowErrUI("방이 존재하지 않습니다.");
+        }
 
 
     }
