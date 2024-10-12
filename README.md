@@ -2,6 +2,11 @@
 
 ## Server
  https://github.com/HyunWoo-Jo/Go_Server_Pr3
+#### - Join Logic
+<img width="562" alt="image" src="https://github.com/user-attachments/assets/870b95a7-a2ce-4d27-9fdf-e0b9a9efd389">
+
+---
+
 
 ## 관련 기술
 ### git
